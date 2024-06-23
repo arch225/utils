@@ -1,7 +1,10 @@
 import pandas as pd
 import os
+from datetime import datetime, timedelta
+import numpy as np
 
 def F_list_files(folder_path):
+#Function to see all data files in a given folder
     file_list = []
     i=-1
     for root, dirs, files in os.walk(folder_path):
@@ -14,6 +17,7 @@ def F_list_files(folder_path):
     return file_list
 
 def F_data_import(loc,ind):
+#Function to import data as dataframe from given location and its index as 'ind'
     x=F_list_files(loc)
     if x[ind][3]=='xlsx':
         df = pd.read_excel(x[ind][1]+'/'+x[ind][2])
@@ -24,6 +28,7 @@ def F_data_import(loc,ind):
     return df
 
 def F_check_data(data):
+#Function to check a dataframe: Data type, total values, missing values, unique values
     col=list(data.columns)
     all_dtyp_lst=[]
     all_val_lst=[]
@@ -48,6 +53,38 @@ def F_check_data(data):
     return df_explore
 
 def F_nodup(data,key):
+#Function to remove duplicates
     df=data.drop_duplicates(subset=key, keep='first')
     print(len(data), len(df))
+    return df
+
+def F_gen_date(df,col,start_date, end_date):
+
+    # Convert start_date and end_date to datetime objects
+    start_date = datetime.strptime(start_date, '%Y-%m-%d')
+    end_date = datetime.strptime(end_date, '%Y-%m-%d')
+    
+    # Generate a list of random dates
+    date_range = (end_date - start_date).days
+    random_dates = [start_date + timedelta(days=np.random.randint(0, date_range)) for _ in range(len(df))]
+    
+    # Add the "date of birth" column to the DataFrame
+    df[col] = random_dates
+    return df
+
+def Fx_dt2str(df, column_name, date_format='%Y-%m-%d'):
+
+    # Check if the column exists in the DataFrame
+    if column_name not in df.columns:
+        raise ValueError(f"Column '{column_name}' not found in DataFrame")
+    # Convert the date column to string format
+    df[column_name] = df[column_name].dt.strftime(date_format)
+    return df
+
+def Fx_str2dt(df, column_name, date_format='%Y-%m-%d'):
+    # Check if the column exists in the DataFrame
+    if column_name not in df.columns:
+        raise ValueError(f"Column '{column_name}' not found in DataFrame")
+    # Convert the string column to date format
+    df[column_name] = pd.to_datetime(df[column_name], format=date_format)
     return df
