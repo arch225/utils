@@ -181,7 +181,14 @@ def get_meta():
     global sher
     return jsonify(list(sher.columns))
 
-@app.route('/anonymize')
+@app.route('/getconfig', methods=['POST'])
+def get_config():
+    data=request.get_json()
+    df=pd.DataFrame(data)
+    df.to_csv('config.csv', index=False)
+    return 'Lodu Lalit'
+
+@app.route('/anonymize', methods=['GET'])
 def anonymize():
     global x
     config_pd=pd.DataFrame(x)
@@ -198,9 +205,7 @@ def anonymize():
             sher_out=F_danon_ssn(sher_out, id='Unnamed: 0', pii_col=config_pd1.iloc[i, 0])
             print('Anonymization of ',config_pd1.iloc[i,0],' is completed')
     sher_out.to_csv('fake_out.csv', index=False)
-    return 'Anonymization has been completed'
-
-
+    return jsonify(sher_out.to_json(orient='records'))
 
 if __name__ == '__main__':
     app.run(debug=True)
