@@ -198,11 +198,11 @@ def anonymize():
         print(config_pd1.iloc[i,0],config_pd1.iloc[i,2],config_pd1.iloc[i,3])
         if config_pd1.iloc[i,2]=='pii-email':
             print('Anonymizing: ',config_pd1.iloc[i,0])
-            sher_out=F_danon_email(sher_out, id='Unnamed: 0', pii_col=config_pd1.iloc[i, 0])
+            sher_out=F_danon_email(sher_out, id='ID', pii_col=config_pd1.iloc[i, 0])
             print('Anonymization of ',config_pd1.iloc[i,0],' is completed')
         elif config_pd1.iloc[i,2]=='pii-ssn':
             print('Anonymizing: ',config_pd1.iloc[i,0])
-            sher_out=F_danon_ssn(sher_out, id='Unnamed: 0', pii_col=config_pd1.iloc[i, 0])
+            sher_out=F_danon_ssn(sher_out, id='ID', pii_col=config_pd1.iloc[i, 0])
             print('Anonymization of ',config_pd1.iloc[i,0],' is completed')
     sher_out.to_csv('fake_out.csv', index=False)
     return jsonify(sher_out.to_json(orient='records'))
