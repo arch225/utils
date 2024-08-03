@@ -194,6 +194,14 @@ def anonymize():
     config_pd=pd.DataFrame(x)
     config_pd1=config_pd[config_pd['PII_indicator']==1]
     sher_out=sher
+    return jsonify(sher_out.to_json(orient='records'))
+
+@app.route('/aslianonymize', methods=['GET'])
+def aslianonymize():
+    global x
+    config_pd=pd.DataFrame(x)
+    config_pd1=config_pd[config_pd['PII_indicator']==1]
+    sher_out=sher
     for i in range(len(config_pd1)):
         print(config_pd1.iloc[i,0],config_pd1.iloc[i,2],config_pd1.iloc[i,3])
         if config_pd1.iloc[i,2]=='pii-email':
